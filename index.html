@@ -327,13 +327,13 @@
 
   /* ===== Cream Piping (buttercream between tiers) ===== */
   .cream-piping {
-    height: 12px;
+    height: 16px;
     position: relative;
     z-index: 2;
-    margin-top: -2px;
-    margin-bottom: -2px;
-    border-radius: 0 0 6px 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-top: 2px;
+    margin-bottom: 2px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
   }
   .cream-piping.pb {
     width: 210px;
@@ -351,11 +351,11 @@
   .cream-piping::after {
     content: '';
     position: absolute;
-    bottom: -3px;
+    bottom: -4px;
     left: 0;
     width: 100%;
-    height: 6px;
-    background: repeating-radial-gradient(circle at 6px 3px, #FFFEF9 0, #FFFEF9 5px, transparent 5px, transparent 14px);
+    height: 8px;
+    background: repeating-radial-gradient(circle at 8px 4px, #FFFEF9 0, #FFFEF9 6px, transparent 6px, transparent 16px);
     background-size: 100% 100%;
   }
 
@@ -398,23 +398,35 @@
     60%  { transform: translateX(-50%) translateY(-3px); }
   }
 
-  /* ===== Frosting Drips (ganache cascading from top tier) ===== */
-  .frosting-drips {
+  /* ===== Ganache Frosting on Top Tier ===== */
+  .tier-top::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -6px;
+    width: calc(100% + 12px);
+    height: 18px;
+    background: linear-gradient(180deg, #FFFEF9 0%, #FDF5EE 60%, #F8EDE0 100%);
+    border-radius: 14px 14px 60% 60% / 10px 10px 6px 6px;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  /* Ganache drips (child divs inside tier-top) */
+  .ganache-drips {
     position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 128px;
+    left: 0;
+    width: 100%;
     height: 0;
-    z-index: 4;
+    z-index: 3;
     pointer-events: none;
   }
-  .frosting-drips .drip {
+  .ganache-drips .drip {
     position: absolute;
-    top: -3px;
+    top: -4px;
     background: linear-gradient(180deg, #FFFEF9 0%, #FDF5EE 70%, #F8EDE0 100%);
-    border-radius: 0 0 12px 12px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
   }
 
   /* ===== Candles ===== */
@@ -716,28 +728,26 @@
 
       <!-- Cake Body -->
       <div class="cake">
-        <!-- Top Wrapper: Frosting Drips + Top Deco + Top Tier -->
+        <!-- Top Wrapper: Top Deco + Top Tier with Ganache Drips -->
         <div class="cake-top-wrapper">
-          <!-- Frosting Drips -->
-          <div class="frosting-drips">
-            <div class="drip" style="left:6px;  height:22px; width:8px;"></div>
-            <div class="drip" style="left:20px; height:30px; width:9px;"></div>
-            <div class="drip" style="left:38px; height:16px; width:7px;"></div>
-            <div class="drip" style="left:55px; height:26px; width:10px;"></div>
-            <div class="drip" style="left:72px; height:18px; width:8px;"></div>
-            <div class="drip" style="left:90px; height:28px; width:9px;"></div>
-            <div class="drip" style="left:106px; height:20px; width:8px;"></div>
-            <div class="drip" style="left:118px; height:14px; width:7px;"></div>
-          </div>
-
           <!-- Top Cherry & Cream Swirl -->
           <div class="cake-top-deco">
             <div class="cherry">🍒</div>
             <div class="cream-swirl-top"></div>
           </div>
 
-          <!-- Top Tier -->
-          <div class="cake-tier tier-top"></div>
+          <!-- Top Tier (with ganache drips inside) -->
+          <div class="cake-tier tier-top">
+            <div class="ganache-drips">
+              <div class="drip" style="left:6px;  height:20px; width:8px;"></div>
+              <div class="drip" style="left:22px; height:28px; width:9px;"></div>
+              <div class="drip" style="left:42px; height:14px; width:7px;"></div>
+              <div class="drip" style="left:56px; height:24px; width:10px;"></div>
+              <div class="drip" style="left:74px; height:16px; width:8px;"></div>
+              <div class="drip" style="left:92px; height:26px; width:9px;"></div>
+              <div class="drip" style="left:108px; height:18px; width:7px;"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Cream Piping: top → mid -->
@@ -964,46 +974,144 @@
   };
 })();
 
-// ==================== CANDLE BLOWING ====================
+// ==================== CANDLE BLOWING + CONFETTI + INTERACTIONS ====================
 (function() {
   const flames = document.querySelectorAll('.flame');
+  const candles = document.querySelectorAll('.candle');
   const hint = document.getElementById('cakeHint');
-  let blown = false;
+  const cakeContainer = document.getElementById('cakeContainer');
+  let blownCount = 0;
+  let allBlown = false;
 
-  document.getElementById('cakeContainer').addEventListener('click', function(e) {
-    if (blown) return;
-    blown = true;
+  // Click individual candle to blow it out
+  candles.forEach(candle => {
+    candle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const flame = this.querySelector('.flame');
+      if (flame.classList.contains('out')) return;
 
-    // Blow out all flames
-    flames.forEach((f, i) => {
-      setTimeout(() => f.classList.add('out'), i * 120);
+      flame.classList.add('out');
+      blownCount++;
+
+      const remaining = 3 - blownCount;
+      if (remaining > 0) {
+        hint.textContent = `💨 还有 ${remaining} 根，继续吹～`;
+        hint.style.color = 'var(--pink-4)';
+        hint.style.fontWeight = '600';
+        hint.style.animation = 'none';
+      }
+
+      if (blownCount >= 3 && !allBlown) {
+        allBlown = true;
+        hint.textContent = '🎉 生日快乐！！许个愿吧 ✨';
+        hint.style.color = 'var(--pink-5)';
+        hint.style.fontWeight = '700';
+        hint.style.fontSize = '1.1em';
+        hint.style.animation = 'none';
+
+        // Fireworks
+        const rect = cakeContainer.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + 80;
+        triggerFireworks(cx, cy);
+
+        // Confetti burst from cake
+        triggerConfetti(rect);
+
+        // Relight after a while
+        setTimeout(() => {
+          flames.forEach((f, i) => {
+            setTimeout(() => f.classList.remove('out'), i * 100);
+          });
+          blownCount = 0;
+          allBlown = false;
+          hint.textContent = '👆 点一下火焰试试～';
+          hint.style.color = '#BBB';
+          hint.style.fontWeight = '400';
+          hint.style.fontSize = '0.9em';
+        }, 5000);
+      }
+    });
+  });
+
+  // Click on cherry for extra bounce + sparkles
+  const cherry = document.querySelector('.cherry');
+  if (cherry) {
+    cherry.addEventListener('click', function(e) {
+      e.stopPropagation();
+      this.style.animation = 'none';
+      this.offsetHeight;
+      this.style.animation = 'cherryBounce 0.5s ease-in-out 4';
+      const r = this.getBoundingClientRect();
+      spawnSparkles(r.left + r.width / 2, r.top + r.height / 2);
+      setTimeout(() => {
+        this.style.animation = 'cherryBounce 2.5s ease-in-out infinite';
+      }, 2000);
+    });
+  }
+})();
+
+// ==================== CONFETTI BURST ====================
+function triggerConfetti(rect) {
+  var colors = ['#FF6B8A','#FFD700','#FFB6C1','#87CEEB','#98FB98','#DDA0DD','#FFB347','#FFF','#FF85A2'];
+  var cx = rect.left + rect.width / 2;
+  var cy = rect.top;
+
+  for (var i = 0; i < 100; i++) {
+    var confetti = document.createElement('div');
+    var size = 5 + Math.random() * 10;
+    confetti.style.cssText = [
+      'position:fixed',
+      'left:' + (cx + (Math.random() - 0.5) * 60) + 'px',
+      'top:' + cy + 'px',
+      'width:' + size + 'px',
+      'height:' + (size * (0.4 + Math.random() * 1.2)) + 'px',
+      'background:' + colors[Math.floor(Math.random() * colors.length)],
+      'border-radius:' + (Math.random() > 0.5 ? '50%' : '2px'),
+      'z-index:999',
+      'pointer-events:none',
+      'transition:all ' + (0.8 + Math.random() * 1.5) + 's cubic-bezier(0.25,0.46,0.45,0.94)',
+      'opacity:1'
+    ].join(';');
+    document.body.appendChild(confetti);
+
+    requestAnimationFrame(function() {
+      confetti.style.transform = 'translate(' + (-120 + Math.random() * 240) + 'px, ' + (-80 - Math.random() * 350) + 'px) rotate(' + (Math.random() * 900) + 'deg)';
+      confetti.style.opacity = '0';
     });
 
-    hint.textContent = '🎉 生日快乐！！🎉';
-    hint.style.color = 'var(--pink-5)';
-    hint.style.animation = 'none';
-    hint.style.fontWeight = '700';
-    hint.style.fontSize = '1.1em';
+    setTimeout(function() { confetti.remove(); }, 2500);
+  }
+}
 
-    // Fireworks at the candle position
-    const rect = this.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + 80;
-    triggerFireworks(cx, cy);
+// ==================== CHERRY SPARKLES ====================
+function spawnSparkles(x, y) {
+  var colors = ['#FFD700','#FFB6C1','#FFF','#FF85A2'];
+  for (var i = 0; i < 15; i++) {
+    var sparkle = document.createElement('div');
+    var size = 3 + Math.random() * 5;
+    sparkle.style.cssText = [
+      'position:fixed',
+      'left:' + x + 'px',
+      'top:' + y + 'px',
+      'width:' + size + 'px',
+      'height:' + size + 'px',
+      'background:' + colors[Math.floor(Math.random() * colors.length)],
+      'border-radius:50%',
+      'z-index:999',
+      'pointer-events:none',
+      'transition:all ' + (0.4 + Math.random() * 0.6) + 's ease-out'
+    ].join(';');
+    document.body.appendChild(sparkle);
 
-    // Relight after a while
-    setTimeout(() => {
-      flames.forEach((f, i) => {
-        setTimeout(() => f.classList.remove('out'), i * 100);
-      });
-      hint.textContent = '👆 再点一次试试～';
-      hint.style.color = '#BBB';
-      hint.style.fontWeight = '400';
-      hint.style.fontSize = '0.9em';
-      blown = false;
-    }, 4000);
-  });
-})();
+    requestAnimationFrame(function() {
+      sparkle.style.transform = 'translate(' + (-30 + Math.random() * 60) + 'px, ' + (-30 + Math.random() * 60) + 'px) scale(0)';
+      sparkle.style.opacity = '0';
+    });
+
+    setTimeout(function() { sparkle.remove(); }, 1200);
+  }
+}
 
 // ==================== SCROLL REVEAL ====================
 (function() {
