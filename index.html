@@ -481,7 +481,6 @@
     width: 0%;
     background: linear-gradient(90deg, var(--pink-3), var(--pink-5));
     border-radius: 4px;
-    transition: width 0.08s ease;
   }
   .wish-slider-thumb {
     position: absolute;
@@ -498,7 +497,6 @@
     font-size: 24px;
     box-shadow: 0 4px 18px rgba(255,107,138,0.3);
     cursor: grab;
-    transition: left 0.08s ease;
     z-index: 2;
   }
   .wish-slider-thumb:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.1); }
@@ -1135,20 +1133,52 @@
   };
 })();
 
-// ==================== CANDLE BLOWING ====================
+// ==================== CANDLE BLOWING + FLOATING BLESSINGS ====================
 (function() {
-  const flames = document.querySelectorAll('.flame');
-  const hint = document.getElementById('cakeHint');
-  const cakeContainer = document.getElementById('cakeContainer');
-  let blown = false;
+  var flames = document.querySelectorAll('.flame');
+  var hint = document.getElementById('cakeHint');
+  var cakeContainer = document.getElementById('cakeContainer');
+  var blown = false;
+  var firstTime = true;
+
+  // 几十条祝福语
+  var blessings = [
+    '永远年轻漂亮 🌸', '天天开心快乐 💖', '心想事成万事如意 ✨',
+    '暴富暴美暴瘦 💰', '吃啥都不胖 🍰', '青春永驻 🌟',
+    '笑口常开 😊', '桃花运爆棚 💕', '工作顺利升职加薪 📈',
+    '身体健康平平安安 🍀', '好运连连挡不住 🌈', '每天被幸福叫醒 🌞',
+    '烦恼统统走开 🚫', '美梦成真 💫', '越来越美 💅',
+    '全世界最幸福的人 🥰', '霉运退散好运降临 🔮', '事事顺心如意 🎯',
+    '财源滚滚来 💵', '被温柔以待 🤗', '所遇皆良人 💝',
+    '光芒万丈 ✨', '元气满满每一天 ⚡', '余生皆甜 🍬',
+    '幸运女神眷顾你 🍀', '岁月不败美人 🌹', '眼里有光心中有爱 💗',
+    '一路繁花相送 🌺', '做最快乐的自己 🎈', '所有愿望都实现 🌠',
+  ];
 
   cakeContainer.addEventListener('click', function() {
+    // After first blow, spawn floating blessings
+    if (!firstTime) {
+      var rect = this.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      // Spawn 1-2 blessings
+      var count = 1 + Math.floor(Math.random() * 2);
+      for (var i = 0; i < count; i++) {
+        spawnBlessing(cx, cy);
+      }
+      // Occasionally a small sparkle
+      if (Math.random() < 0.5) {
+        triggerFireworks(cx, cy);
+      }
+      return;
+    }
+
     if (blown) return;
     blown = true;
 
     // Blow out all flames
-    flames.forEach((f, i) => {
-      setTimeout(() => f.classList.add('out'), i * 120);
+    flames.forEach(function(f, i) {
+      setTimeout(function() { f.classList.add('out'); }, i * 120);
     });
 
     hint.textContent = '🎉 生日快乐！！🎉';
@@ -1158,23 +1188,61 @@
     hint.style.fontSize = '1.1em';
 
     // Fireworks
-    const rect = this.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + 80;
+    var rect = this.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + 80;
     triggerFireworks(cx, cy);
 
-    // Relight after a while
-    setTimeout(() => {
-      flames.forEach((f, i) => {
-        setTimeout(() => f.classList.remove('out'), i * 100);
+    // Relight, then switch to blessing mode
+    setTimeout(function() {
+      flames.forEach(function(f, i) {
+        setTimeout(function() { f.classList.remove('out'); }, i * 100);
       });
-      hint.textContent = '👆 再点一次试试～';
+      hint.textContent = '👆 再点一下有惊喜哦～';
       hint.style.color = '#BBB';
       hint.style.fontWeight = '400';
       hint.style.fontSize = '0.9em';
       blown = false;
+      firstTime = false;
     }, 4000);
   });
+
+  // Spawn a floating blessing text
+  function spawnBlessing(x, y) {
+    var el = document.createElement('div');
+    var text = blessings[Math.floor(Math.random() * blessings.length)];
+    var offsetX = -40 + Math.random() * 80;
+    var offsetY = -20 + Math.random() * 40;
+
+    el.textContent = text;
+    el.style.cssText = [
+      'position:fixed',
+      'left:' + (x + offsetX) + 'px',
+      'top:' + (y + offsetY) + 'px',
+      'font-size:' + (16 + Math.random() * 10) + 'px',
+      'color:#FF6B8A',
+      'font-weight:700',
+      'z-index:300',
+      'pointer-events:none',
+      'white-space:nowrap',
+      'opacity:0',
+      'transform:scale(0.5)',
+      'transition:all 3s cubic-bezier(0.25,0.46,0.45,0.94)',
+      'text-shadow:0 2px 8px rgba(255,107,138,0.3)'
+    ].join(';');
+
+    document.body.appendChild(el);
+
+    requestAnimationFrame(function() {
+      el.style.opacity = '1';
+      el.style.transform = 'scale(1) translateY(-' + (80 + Math.random() * 120) + 'px)';
+    });
+
+    setTimeout(function() {
+      el.style.opacity = '0';
+      setTimeout(function() { el.remove(); }, 500);
+    }, 2500);
+  }
 })();
 
 // ==================== WISHING SLIDER ====================
