@@ -294,24 +294,6 @@
     padding-bottom: 10px;
   }
 
-  /* ===== Cherry ===== */
-  .cherry-top {
-    display: block;
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: -6px;
-    position: relative;
-    z-index: 5;
-    animation: cherryFloat 3s ease-in-out infinite;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
-    pointer-events: none;
-  }
-  @keyframes cherryFloat {
-    0%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-5px); }
-    60% { transform: translateY(-2px); }
-  }
-
   /* ===== Cake Body ===== */
   .cake {
     width: 220px;
@@ -355,40 +337,6 @@
     box-shadow:
       inset 0 2px 5px rgba(255,255,255,0.35),
       inset 0 -3px 6px rgba(0,0,0,0.04);
-  }
-
-  /* Sprinkles on each tier */
-  .tier-bottom::after,
-  .tier-mid::after,
-  .tier-top::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-  }
-  .tier-bottom::after {
-    box-shadow:
-      18px 8px 0 3px #FFD700, 45px 18px 0 2px #FF6B8A,
-      70px 10px 0 3px #87CEEB, 95px 24px 0 3px #FFD700,
-      125px 12px 0 2px #98FB98, 155px 20px 0 3px #DDA0DD,
-      175px 8px 0 2px #FFB347, 35px 32px 0 2px #FF6B8A,
-      110px 30px 0 3px #87CEEB, 165px 32px 0 2px #FFD700;
-  }
-  .tier-mid::after {
-    box-shadow:
-      12px 6px 0 3px #FFD700, 38px 16px 0 2px #98FB98,
-      58px 8px 0 2px #FF6B8A, 82px 20px 0 3px #DDA0DD,
-      108px 10px 0 2px #87CEEB, 135px 18px 0 3px #FFB347,
-      25px 28px 0 2px #FFD700, 72px 28px 0 2px #FF6B8A,
-      125px 26px 0 3px #87CEEB;
-  }
-  .tier-top::after {
-    box-shadow:
-      10px 5px 0 2px #FFD700, 32px 14px 0 3px #FF6B8A,
-      55px 7px 0 2px #87CEEB, 78px 18px 0 3px #98FB98,
-      100px 9px 0 2px #DDA0DD, 22px 24px 0 2px #FFB347,
-      65px 24px 0 3px #FFD700, 95px 25px 0 2px #FF6B8A;
   }
 
   /* ===== Cream Piping between tiers ===== */
@@ -784,6 +732,19 @@
     </p>
   </section>
 
+  <!-- ===== Wishing Slider ===== -->
+  <section class="card wish-section reveal">
+    <h2>✨ 滑动开始许愿 ✨</h2>
+    <p class="wish-desc">闭上眼睛，许一个最美的愿望吧</p>
+    <div class="wish-slider-container" id="wishSlider">
+      <div class="wish-slider-track">
+        <div class="wish-slider-fill" id="wishFill"></div>
+        <div class="wish-slider-thumb" id="wishThumb">🕯️</div>
+      </div>
+    </div>
+    <p class="wish-hint" id="wishHint">👉 向右滑动蜡烛开始许愿</p>
+  </section>
+
   <!-- ===== Cake & Candle ===== -->
   <section class="card cake-section reveal">
     <h2>🕯️ 点一下蜡烛试试 🕯️</h2>
@@ -794,9 +755,6 @@
         <div class="candle"><div class="flame"></div></div>
         <div class="candle"><div class="flame"></div></div>
       </div>
-
-      <!-- Cherry -->
-      <div class="cherry-top">🍒</div>
 
       <!-- Cake Body -->
       <div class="cake">
@@ -818,19 +776,6 @@
       <div class="cake-stand"></div>
     </div>
     <p class="cake-hint" id="cakeHint">👆 点一下火焰试试～</p>
-  </section>
-
-  <!-- ===== Wishing Slider ===== -->
-  <section class="card wish-section reveal">
-    <h2>✨ 滑动开始许愿 ✨</h2>
-    <p class="wish-desc">闭上眼睛，许一个最美的愿望吧</p>
-    <div class="wish-slider-container" id="wishSlider">
-      <div class="wish-slider-track">
-        <div class="wish-slider-fill" id="wishFill"></div>
-        <div class="wish-slider-thumb" id="wishThumb">🕯️</div>
-      </div>
-    </div>
-    <p class="wish-hint" id="wishHint">👉 向右滑动蜡烛开始许愿</p>
   </section>
 
   <!-- ===== Fortune Cards ===== -->
