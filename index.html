@@ -198,28 +198,6 @@
     padding-bottom: 10px;
   }
 
-  /* ===== Cake Stand ===== */
-  .cake-stand {
-    width: 230px;
-    height: 10px;
-    margin: 10px auto 0;
-    background: linear-gradient(180deg, #F5E6D3 0%, #E8D5B7 50%, #DDC8A8 100%);
-    border-radius: 50%;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
-  }
-  .cake-stand::after {
-    content: '';
-    position: absolute;
-    top: -22px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px;
-    height: 24px;
-    background: linear-gradient(180deg, #F0E0C8 0%, #E0D0B0 100%);
-    border-radius: 8px 8px 0 0;
-  }
-
   /* ===== Cake Body ===== */
   .cake {
     position: relative;
@@ -228,57 +206,59 @@
     align-items: center;
   }
 
-  /* ===== Top Tier Wrapper (for drip positioning) ===== */
-  .cake-top-wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* ===== Cake Tiers (3D cylinder effect via horizontal gradient) ===== */
+  /* ===== Cake Tiers (3D cylinder gradient) ===== */
   .cake-tier {
     position: relative;
   }
-
   .tier-bottom {
     width: 200px;
-    height: 44px;
+    height: 46px;
     background: linear-gradient(90deg,
       #E892A5 0%, #F2A8B8 12%, #FBBAC8 28%,
       #FCC8D2 48%, #FBBAC8 68%, #F0A4B5 88%, #E090A0 100%);
     border-radius: 10px 10px 6px 6px;
     box-shadow:
       inset 0 2px 6px rgba(255,255,255,0.3),
-      inset 0 -4px 8px rgba(0,0,0,0.06),
-      0 2px 8px rgba(0,0,0,0.05);
+      inset 0 -4px 8px rgba(0,0,0,0.06);
   }
   .tier-mid {
     width: 164px;
-    height: 40px;
+    height: 42px;
     background: linear-gradient(90deg,
       #F0A0B2 0%, #F8B8C5 12%, #FCC6D0 28%,
       #FDD2D8 48%, #FCC6D0 68%, #F6B0BE 88%, #E898A8 100%);
     border-radius: 9px 9px 5px 5px;
     box-shadow:
       inset 0 2px 5px rgba(255,255,255,0.3),
-      inset 0 -3px 6px rgba(0,0,0,0.05),
-      0 2px 6px rgba(0,0,0,0.04);
+      inset 0 -3px 6px rgba(0,0,0,0.05);
   }
   .tier-top {
     width: 128px;
-    height: 34px;
+    height: 36px;
     background: linear-gradient(90deg,
       #F8B8C4 0%, #FCC8D2 12%, #FDD8E0 28%,
       #FEE2E6 48%, #FDD8E0 68%, #FCC4CC 88%, #F0A8B4 100%);
     border-radius: 8px 8px 5px 5px;
     box-shadow:
       inset 0 2px 5px rgba(255,255,255,0.35),
-      inset 0 -3px 6px rgba(0,0,0,0.04),
-      0 2px 6px rgba(0,0,0,0.04);
+      inset 0 -3px 6px rgba(0,0,0,0.04);
   }
 
-  /* Sprinkles on each tier (using box-shadow dots) */
+  /* Ganache frosting layer on top tier */
+  .tier-top::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: -3px;
+    width: calc(100% + 6px);
+    height: 14px;
+    background: linear-gradient(180deg, #FFFEF9, #FDF5EE 50%, #F8EDE0);
+    border-radius: 10px 10px 60% 60% / 7px 7px 5px 5px;
+    z-index: 2;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  /* Sprinkles on each tier (via box-shadow) */
   .tier-bottom::after,
   .tier-mid::after,
   .tier-top::after {
@@ -287,6 +267,7 @@
     top: 0; left: 0;
     width: 100%; height: 100%;
     pointer-events: none;
+    z-index: 1;
   }
   .tier-bottom::after {
     box-shadow:
@@ -325,108 +306,51 @@
       95px 25px 0 2px #FF6B8A;
   }
 
-  /* ===== Cream Piping (buttercream between tiers) ===== */
+  /* ===== Cream Piping between tiers ===== */
   .cream-piping {
-    height: 16px;
+    height: 14px;
     position: relative;
     z-index: 2;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    margin: 3px 0;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.05);
   }
-  .cream-piping.pb {
-    width: 210px;
-    background: linear-gradient(180deg, #FFFEF9 0%, #F5E6DC 100%);
-  }
-  .cream-piping.pm {
-    width: 176px;
-    background: linear-gradient(180deg, #FFFEF9 0%, #F7EAE0 100%);
-  }
-  .cream-piping.pt {
-    width: 140px;
-    background: linear-gradient(180deg, #FFFEF9 0%, #F8EDE2 100%);
-  }
-  /* Piping scallop dots */
-  .cream-piping::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 100%;
-    height: 8px;
-    background: repeating-radial-gradient(circle at 8px 4px, #FFFEF9 0, #FFFEF9 6px, transparent 6px, transparent 16px);
-    background-size: 100% 100%;
-  }
+  .piping-pb { width: 210px; background: linear-gradient(180deg, #FFFEF9, #F5E6DC); }
+  .piping-pm { width: 176px; background: linear-gradient(180deg, #FFFEF9, #F7EAE0); }
+  .piping-pt { width: 140px; background: linear-gradient(180deg, #FFFEF9, #F8EDE2); }
 
-  /* ===== Top Cream Swirl + Cherry ===== */
+  /* ===== Cherry on top ===== */
   .cake-top-deco {
     position: relative;
     width: 128px;
-    height: 20px;
-    margin-bottom: -4px;
-    z-index: 3;
-  }
-  .cream-swirl-top {
-    position: absolute;
-    top: 3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 108px;
-    height: 16px;
-    background:
-      radial-gradient(circle at 14px 9px, #FFFEF9 10px, transparent 11px),
-      radial-gradient(circle at 38px 7px, #FFFEF9 12px, transparent 13px),
-      radial-gradient(circle at 62px 8px, #FFFEF9 11px, transparent 12px),
-      radial-gradient(circle at 86px 9px, #FFFEF9 10px, transparent 11px);
-    border-radius: 50%;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
-  }
-  .cherry {
-    position: absolute;
-    top: -22px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.15));
-    animation: cherryBounce 2.5s ease-in-out infinite;
+    height: 18px;
+    margin-bottom: -2px;
     z-index: 5;
+  }
+  .cake-top-deco .cherry {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+    animation: cherryBounce 3s ease-in-out infinite;
+    pointer-events: none;
   }
   @keyframes cherryBounce {
     0%, 100% { transform: translateX(-50%) translateY(0); }
-    40%  { transform: translateX(-50%) translateY(-7px); }
-    60%  { transform: translateX(-50%) translateY(-3px); }
+    40%  { transform: translateX(-50%) translateY(-5px); }
+    60%  { transform: translateX(-50%) translateY(-2px); }
   }
 
-  /* ===== Ganache Frosting on Top Tier ===== */
-  .tier-top::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: -6px;
-    width: calc(100% + 12px);
-    height: 18px;
-    background: linear-gradient(180deg, #FFFEF9 0%, #FDF5EE 60%, #F8EDE0 100%);
-    border-radius: 14px 14px 60% 60% / 10px 10px 6px 6px;
-    z-index: 2;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  /* Ganache drips (child divs inside tier-top) */
-  .ganache-drips {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 0;
-    z-index: 3;
-    pointer-events: none;
-  }
-  .ganache-drips .drip {
-    position: absolute;
-    top: -4px;
-    background: linear-gradient(180deg, #FFFEF9 0%, #FDF5EE 70%, #F8EDE0 100%);
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  /* ===== Cake Stand ===== */
+  .cake-stand {
+    width: 220px;
+    height: 10px;
+    margin: 12px auto 0;
+    background: linear-gradient(180deg, #F5E6D3, #E8D5B7 50%, #DDC8A8);
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   }
 
   /* ===== Candles ===== */
@@ -434,7 +358,7 @@
     display: flex;
     justify-content: center;
     gap: 16px;
-    margin-bottom: -6px;
+    margin-bottom: -5px;
     position: relative;
     z-index: 10;
   }
@@ -447,27 +371,6 @@
     border-radius: 4px 4px 1px 1px;
     position: relative;
     box-shadow: inset 0 2px 0 rgba(255,255,255,0.6);
-  }
-  /* Wax drip running down candle */
-  .candle::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    right: -2px;
-    width: 3px;
-    height: 10px;
-    background: linear-gradient(180deg, #FFECD2, #FFE4B5);
-    border-radius: 0 0 1.5px 1.5px;
-  }
-  .candle:nth-child(2)::before {
-    left: -2px;
-    right: auto;
-    top: 14px;
-    height: 7px;
-  }
-  .candle:nth-child(3)::before {
-    top: 7px;
-    height: 13px;
   }
   /* Wick */
   .candle::after {
@@ -715,55 +618,35 @@
     <div class="cake-container" id="cakeContainer">
       <!-- Candles -->
       <div class="candles">
-        <div class="candle" data-candle="1">
-          <div class="flame"></div>
-        </div>
-        <div class="candle" data-candle="2">
-          <div class="flame"></div>
-        </div>
-        <div class="candle" data-candle="3">
-          <div class="flame"></div>
-        </div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
       </div>
 
       <!-- Cake Body -->
       <div class="cake">
-        <!-- Top Wrapper: Top Deco + Top Tier with Ganache Drips -->
-        <div class="cake-top-wrapper">
-          <!-- Top Cherry & Cream Swirl -->
-          <div class="cake-top-deco">
-            <div class="cherry">🍒</div>
-            <div class="cream-swirl-top"></div>
-          </div>
-
-          <!-- Top Tier (with ganache drips inside) -->
-          <div class="cake-tier tier-top">
-            <div class="ganache-drips">
-              <div class="drip" style="left:6px;  height:20px; width:8px;"></div>
-              <div class="drip" style="left:22px; height:28px; width:9px;"></div>
-              <div class="drip" style="left:42px; height:14px; width:7px;"></div>
-              <div class="drip" style="left:56px; height:24px; width:10px;"></div>
-              <div class="drip" style="left:74px; height:16px; width:8px;"></div>
-              <div class="drip" style="left:92px; height:26px; width:9px;"></div>
-              <div class="drip" style="left:108px; height:18px; width:7px;"></div>
-            </div>
-          </div>
+        <!-- Cherry on top -->
+        <div class="cake-top-deco">
+          <div class="cherry">🍒</div>
         </div>
 
-        <!-- Cream Piping: top → mid -->
-        <div class="cream-piping pt"></div>
+        <!-- Top Tier (with ganache coating via pseudo-element) -->
+        <div class="cake-tier tier-top"></div>
+
+        <!-- Cream Piping -->
+        <div class="cream-piping piping-pt"></div>
 
         <!-- Middle Tier -->
         <div class="cake-tier tier-mid"></div>
 
-        <!-- Cream Piping: mid → bottom -->
-        <div class="cream-piping pm"></div>
+        <!-- Cream Piping -->
+        <div class="cream-piping piping-pm"></div>
 
         <!-- Bottom Tier -->
         <div class="cake-tier tier-bottom"></div>
 
-        <!-- Cream Piping: bottom edge -->
-        <div class="cream-piping pb"></div>
+        <!-- Cream Piping bottom -->
+        <div class="cream-piping piping-pb"></div>
       </div>
 
       <!-- Cake Stand -->
@@ -974,144 +857,47 @@
   };
 })();
 
-// ==================== CANDLE BLOWING + CONFETTI + INTERACTIONS ====================
+// ==================== CANDLE BLOWING ====================
 (function() {
   const flames = document.querySelectorAll('.flame');
-  const candles = document.querySelectorAll('.candle');
   const hint = document.getElementById('cakeHint');
   const cakeContainer = document.getElementById('cakeContainer');
-  let blownCount = 0;
-  let allBlown = false;
+  let blown = false;
 
-  // Click individual candle to blow it out
-  candles.forEach(candle => {
-    candle.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const flame = this.querySelector('.flame');
-      if (flame.classList.contains('out')) return;
+  cakeContainer.addEventListener('click', function() {
+    if (blown) return;
+    blown = true;
 
-      flame.classList.add('out');
-      blownCount++;
-
-      const remaining = 3 - blownCount;
-      if (remaining > 0) {
-        hint.textContent = `💨 还有 ${remaining} 根，继续吹～`;
-        hint.style.color = 'var(--pink-4)';
-        hint.style.fontWeight = '600';
-        hint.style.animation = 'none';
-      }
-
-      if (blownCount >= 3 && !allBlown) {
-        allBlown = true;
-        hint.textContent = '🎉 生日快乐！！许个愿吧 ✨';
-        hint.style.color = 'var(--pink-5)';
-        hint.style.fontWeight = '700';
-        hint.style.fontSize = '1.1em';
-        hint.style.animation = 'none';
-
-        // Fireworks
-        const rect = cakeContainer.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + 80;
-        triggerFireworks(cx, cy);
-
-        // Confetti burst from cake
-        triggerConfetti(rect);
-
-        // Relight after a while
-        setTimeout(() => {
-          flames.forEach((f, i) => {
-            setTimeout(() => f.classList.remove('out'), i * 100);
-          });
-          blownCount = 0;
-          allBlown = false;
-          hint.textContent = '👆 点一下火焰试试～';
-          hint.style.color = '#BBB';
-          hint.style.fontWeight = '400';
-          hint.style.fontSize = '0.9em';
-        }, 5000);
-      }
+    // Blow out all flames
+    flames.forEach((f, i) => {
+      setTimeout(() => f.classList.add('out'), i * 120);
     });
+
+    hint.textContent = '🎉 生日快乐！！🎉';
+    hint.style.color = 'var(--pink-5)';
+    hint.style.animation = 'none';
+    hint.style.fontWeight = '700';
+    hint.style.fontSize = '1.1em';
+
+    // Fireworks
+    const rect = this.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + 80;
+    triggerFireworks(cx, cy);
+
+    // Relight after a while
+    setTimeout(() => {
+      flames.forEach((f, i) => {
+        setTimeout(() => f.classList.remove('out'), i * 100);
+      });
+      hint.textContent = '👆 再点一次试试～';
+      hint.style.color = '#BBB';
+      hint.style.fontWeight = '400';
+      hint.style.fontSize = '0.9em';
+      blown = false;
+    }, 4000);
   });
-
-  // Click on cherry for extra bounce + sparkles
-  const cherry = document.querySelector('.cherry');
-  if (cherry) {
-    cherry.addEventListener('click', function(e) {
-      e.stopPropagation();
-      this.style.animation = 'none';
-      this.offsetHeight;
-      this.style.animation = 'cherryBounce 0.5s ease-in-out 4';
-      const r = this.getBoundingClientRect();
-      spawnSparkles(r.left + r.width / 2, r.top + r.height / 2);
-      setTimeout(() => {
-        this.style.animation = 'cherryBounce 2.5s ease-in-out infinite';
-      }, 2000);
-    });
-  }
 })();
-
-// ==================== CONFETTI BURST ====================
-function triggerConfetti(rect) {
-  var colors = ['#FF6B8A','#FFD700','#FFB6C1','#87CEEB','#98FB98','#DDA0DD','#FFB347','#FFF','#FF85A2'];
-  var cx = rect.left + rect.width / 2;
-  var cy = rect.top;
-
-  for (var i = 0; i < 100; i++) {
-    var confetti = document.createElement('div');
-    var size = 5 + Math.random() * 10;
-    confetti.style.cssText = [
-      'position:fixed',
-      'left:' + (cx + (Math.random() - 0.5) * 60) + 'px',
-      'top:' + cy + 'px',
-      'width:' + size + 'px',
-      'height:' + (size * (0.4 + Math.random() * 1.2)) + 'px',
-      'background:' + colors[Math.floor(Math.random() * colors.length)],
-      'border-radius:' + (Math.random() > 0.5 ? '50%' : '2px'),
-      'z-index:999',
-      'pointer-events:none',
-      'transition:all ' + (0.8 + Math.random() * 1.5) + 's cubic-bezier(0.25,0.46,0.45,0.94)',
-      'opacity:1'
-    ].join(';');
-    document.body.appendChild(confetti);
-
-    requestAnimationFrame(function() {
-      confetti.style.transform = 'translate(' + (-120 + Math.random() * 240) + 'px, ' + (-80 - Math.random() * 350) + 'px) rotate(' + (Math.random() * 900) + 'deg)';
-      confetti.style.opacity = '0';
-    });
-
-    setTimeout(function() { confetti.remove(); }, 2500);
-  }
-}
-
-// ==================== CHERRY SPARKLES ====================
-function spawnSparkles(x, y) {
-  var colors = ['#FFD700','#FFB6C1','#FFF','#FF85A2'];
-  for (var i = 0; i < 15; i++) {
-    var sparkle = document.createElement('div');
-    var size = 3 + Math.random() * 5;
-    sparkle.style.cssText = [
-      'position:fixed',
-      'left:' + x + 'px',
-      'top:' + y + 'px',
-      'width:' + size + 'px',
-      'height:' + size + 'px',
-      'background:' + colors[Math.floor(Math.random() * colors.length)],
-      'border-radius:50%',
-      'z-index:999',
-      'pointer-events:none',
-      'transition:all ' + (0.4 + Math.random() * 0.6) + 's ease-out'
-    ].join(';');
-    document.body.appendChild(sparkle);
-
-    requestAnimationFrame(function() {
-      sparkle.style.transform = 'translate(' + (-30 + Math.random() * 60) + 'px, ' + (-30 + Math.random() * 60) + 'px) scale(0)';
-      sparkle.style.opacity = '0';
-    });
-
-    setTimeout(function() { sparkle.remove(); }, 1200);
-  }
-}
 
 // ==================== SCROLL REVEAL ====================
 (function() {
