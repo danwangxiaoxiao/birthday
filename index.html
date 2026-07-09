@@ -287,7 +287,6 @@
 
   /* Cake Container */
   .cake-container {
-    position: relative;
     display: inline-block;
     cursor: pointer;
     user-select: none;
@@ -295,36 +294,53 @@
     padding-bottom: 10px;
   }
 
-  /* ===== Cake Body ===== */
-  .cake {
+  /* ===== Cherry ===== */
+  .cherry-top {
+    display: block;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: -6px;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    z-index: 5;
+    animation: cherryFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+    pointer-events: none;
+  }
+  @keyframes cherryFloat {
+    0%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-5px); }
+    60% { transform: translateY(-2px); }
   }
 
-  /* ===== Cake Tiers (3D cylinder gradient) ===== */
+  /* ===== Cake Body ===== */
+  .cake {
+    width: 220px;
+    margin: 0 auto;
+  }
+
+  /* ===== Cake Tiers ===== */
   .cake-tier {
+    margin: 0 auto;
     position: relative;
   }
   .tier-bottom {
     width: 200px;
-    height: 46px;
+    height: 44px;
     background: linear-gradient(90deg,
-      #E892A5 0%, #F2A8B8 12%, #FBBAC8 28%,
-      #FCC8D2 48%, #FBBAC8 68%, #F0A4B5 88%, #E090A0 100%);
-    border-radius: 10px 10px 6px 6px;
+      #E892A5, #F2A8B8 12%, #FBBAC8 28%,
+      #FCC8D2 48%, #FBBAC8 68%, #F0A4B5 88%, #E090A0);
+    border-radius: 10px 10px 4px 4px;
     box-shadow:
       inset 0 2px 6px rgba(255,255,255,0.3),
       inset 0 -4px 8px rgba(0,0,0,0.06);
   }
   .tier-mid {
     width: 164px;
-    height: 42px;
+    height: 40px;
     background: linear-gradient(90deg,
-      #F0A0B2 0%, #F8B8C5 12%, #FCC6D0 28%,
-      #FDD2D8 48%, #FCC6D0 68%, #F6B0BE 88%, #E898A8 100%);
-    border-radius: 9px 9px 5px 5px;
+      #F0A0B2, #F8B8C5 12%, #FCC6D0 28%,
+      #FDD2D8 48%, #FCC6D0 68%, #F6B0BE 88%, #E898A8);
+    border-radius: 9px 9px 3px 3px;
     box-shadow:
       inset 0 2px 5px rgba(255,255,255,0.3),
       inset 0 -3px 6px rgba(0,0,0,0.05);
@@ -333,29 +349,15 @@
     width: 128px;
     height: 36px;
     background: linear-gradient(90deg,
-      #F8B8C4 0%, #FCC8D2 12%, #FDD8E0 28%,
-      #FEE2E6 48%, #FDD8E0 68%, #FCC4CC 88%, #F0A8B4 100%);
-    border-radius: 8px 8px 5px 5px;
+      #F8B8C4, #FCC8D2 12%, #FDD8E0 28%,
+      #FEE2E6 48%, #FDD8E0 68%, #FCC4CC 88%, #F0A8B4);
+    border-radius: 8px 8px 3px 3px;
     box-shadow:
       inset 0 2px 5px rgba(255,255,255,0.35),
       inset 0 -3px 6px rgba(0,0,0,0.04);
   }
 
-  /* Ganache frosting layer on top tier */
-  .tier-top::before {
-    content: '';
-    position: absolute;
-    top: -7px;
-    left: -3px;
-    width: calc(100% + 6px);
-    height: 14px;
-    background: linear-gradient(180deg, #FFFEF9, #FDF5EE 50%, #F8EDE0);
-    border-radius: 10px 10px 60% 60% / 7px 7px 5px 5px;
-    z-index: 2;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-  }
-
-  /* Sprinkles on each tier (via box-shadow) */
+  /* Sprinkles on each tier */
   .tier-bottom::after,
   .tier-mid::after,
   .tier-top::after {
@@ -364,81 +366,41 @@
     top: 0; left: 0;
     width: 100%; height: 100%;
     pointer-events: none;
-    z-index: 1;
   }
   .tier-bottom::after {
     box-shadow:
-      18px 8px 0 3px #FFD700,
-      45px 18px 0 2.5px #FF6B8A,
-      70px 10px 0 2.5px #87CEEB,
-      95px 24px 0 3px #FFD700,
-      125px 12px 0 2px #98FB98,
-      155px 20px 0 2.5px #DDA0DD,
-      175px 8px 0 2px #FFB347,
-      35px 32px 0 2px #FF6B8A,
-      110px 30px 0 3px #87CEEB,
-      165px 32px 0 2px #FFD700;
+      18px 8px 0 3px #FFD700, 45px 18px 0 2px #FF6B8A,
+      70px 10px 0 3px #87CEEB, 95px 24px 0 3px #FFD700,
+      125px 12px 0 2px #98FB98, 155px 20px 0 3px #DDA0DD,
+      175px 8px 0 2px #FFB347, 35px 32px 0 2px #FF6B8A,
+      110px 30px 0 3px #87CEEB, 165px 32px 0 2px #FFD700;
   }
   .tier-mid::after {
     box-shadow:
-      12px 6px 0 2.5px #FFD700,
-      38px 16px 0 2px #98FB98,
-      58px 8px 0 2px #FF6B8A,
-      82px 20px 0 3px #DDA0DD,
-      108px 10px 0 2px #87CEEB,
-      135px 18px 0 2.5px #FFB347,
-      25px 28px 0 2px #FFD700,
-      72px 28px 0 2px #FF6B8A,
+      12px 6px 0 3px #FFD700, 38px 16px 0 2px #98FB98,
+      58px 8px 0 2px #FF6B8A, 82px 20px 0 3px #DDA0DD,
+      108px 10px 0 2px #87CEEB, 135px 18px 0 3px #FFB347,
+      25px 28px 0 2px #FFD700, 72px 28px 0 2px #FF6B8A,
       125px 26px 0 3px #87CEEB;
   }
   .tier-top::after {
     box-shadow:
-      10px 5px 0 2px #FFD700,
-      32px 14px 0 2.5px #FF6B8A,
-      55px 7px 0 2px #87CEEB,
-      78px 18px 0 3px #98FB98,
-      100px 9px 0 2px #DDA0DD,
-      22px 24px 0 2px #FFB347,
-      65px 24px 0 2.5px #FFD700,
-      95px 25px 0 2px #FF6B8A;
+      10px 5px 0 2px #FFD700, 32px 14px 0 3px #FF6B8A,
+      55px 7px 0 2px #87CEEB, 78px 18px 0 3px #98FB98,
+      100px 9px 0 2px #DDA0DD, 22px 24px 0 2px #FFB347,
+      65px 24px 0 3px #FFD700, 95px 25px 0 2px #FF6B8A;
   }
 
   /* ===== Cream Piping between tiers ===== */
   .cream-piping {
-    height: 14px;
-    position: relative;
-    z-index: 2;
-    margin: 3px 0;
-    border-radius: 0 0 7px 7px;
+    margin: 0 auto;
+    height: 12px;
+    border-radius: 0 0 6px 6px;
     box-shadow: 0 2px 3px rgba(0,0,0,0.05);
   }
-  .piping-pb { width: 210px; background: linear-gradient(180deg, #FFFEF9, #F5E6DC); }
-  .piping-pm { width: 176px; background: linear-gradient(180deg, #FFFEF9, #F7EAE0); }
   .piping-pt { width: 140px; background: linear-gradient(180deg, #FFFEF9, #F8EDE2); }
-
-  /* ===== Cherry on top ===== */
-  .cake-top-deco {
-    position: relative;
-    width: 128px;
-    height: 18px;
-    margin-bottom: -2px;
-    z-index: 5;
-  }
-  .cake-top-deco .cherry {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 24px;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
-    animation: cherryBounce 3s ease-in-out infinite;
-    pointer-events: none;
-  }
-  @keyframes cherryBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    40%  { transform: translateX(-50%) translateY(-5px); }
-    60%  { transform: translateX(-50%) translateY(-2px); }
-  }
+  .piping-pm { width: 176px; background: linear-gradient(180deg, #FFFEF9, #F7EAE0); }
+  .piping-pb { width: 210px; background: linear-gradient(180deg, #FFFEF9, #F5E6DC); }
 
   /* ===== Cake Stand ===== */
   .cake-stand {
@@ -833,29 +795,22 @@
         <div class="candle"><div class="flame"></div></div>
       </div>
 
+      <!-- Cherry -->
+      <div class="cherry-top">🍒</div>
+
       <!-- Cake Body -->
       <div class="cake">
-        <!-- Cherry on top -->
-        <div class="cake-top-deco">
-          <div class="cherry">🍒</div>
-        </div>
-
-        <!-- Top Tier (with ganache coating via pseudo-element) -->
+        <!-- Top Tier -->
         <div class="cake-tier tier-top"></div>
-
         <!-- Cream Piping -->
         <div class="cream-piping piping-pt"></div>
-
         <!-- Middle Tier -->
         <div class="cake-tier tier-mid"></div>
-
         <!-- Cream Piping -->
         <div class="cream-piping piping-pm"></div>
-
         <!-- Bottom Tier -->
         <div class="cake-tier tier-bottom"></div>
-
-        <!-- Cream Piping bottom -->
+        <!-- Cream Piping -->
         <div class="cream-piping piping-pb"></div>
       </div>
 
@@ -1307,6 +1262,9 @@
   }
 
   function showCandlePopup() {
+    // Play notification chime
+    playDingSound();
+
     var popup = document.createElement('div');
     popup.className = 'candle-popup';
     popup.textContent = '🕯️ 现在可以点击熄灭蜡烛啦！';
@@ -1317,6 +1275,33 @@
       popup.classList.add('out');
       setTimeout(function() { popup.remove(); }, 500);
     }, 6000);
+  }
+
+  // Simple two-tone notification chime
+  function playDingSound() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var now = ctx.currentTime;
+      // First chime
+      var o1 = ctx.createOscillator();
+      var g1 = ctx.createGain();
+      o1.type = 'sine';
+      o1.frequency.value = 880;
+      g1.gain.setValueAtTime(0.25, now);
+      g1.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      o1.connect(g1); g1.connect(ctx.destination);
+      o1.start(now); o1.stop(now + 0.3);
+      // Second chime (higher)
+      var o2 = ctx.createOscillator();
+      var g2 = ctx.createGain();
+      o2.type = 'sine';
+      o2.frequency.value = 1100;
+      g2.gain.setValueAtTime(0.01, now + 0.15);
+      g2.gain.setValueAtTime(0.2, now + 0.2);
+      g2.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+      o2.connect(g2); g2.connect(ctx.destination);
+      o2.start(now + 0.15); o2.stop(now + 0.55);
+    } catch(e) { /* ignore audio errors */ }
   }
 
   // Mouse events
@@ -1420,7 +1405,7 @@
     // 4 4 3 1 2 1
     349, 349, 330, 523, 587, 523,
   ];
-  const noteDuration = 0.35; // seconds per note
+  const noteDuration = 0.2; // seconds per note (faster tempo)
   const pauses = [5, 11, 18]; // pause after these indices (end of phrases)
   // Indices for which notes to play longer
   const longNotes = new Set([4, 5, 10, 11, 13, 17, 22, 23]);
@@ -1473,7 +1458,7 @@
     currentNoteIdx++;
 
     const gap = pauses.includes(currentNoteIdx - 1);
-    musicInterval = setTimeout(playMelody, (duration + (gap ? 0.25 : 0.08)) * 1000);
+    musicInterval = setTimeout(playMelody, (duration + (gap ? 0.15 : 0.05)) * 1000);
   }
 
   function startMusic() {
