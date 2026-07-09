@@ -29,6 +29,103 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* ============ Entry Overlay (Black Screen + Name Input) ============ */
+  #entry-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #entry-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  #entry-overlay .entry-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 24px;
+    padding: 36px 28px;
+    text-align: center;
+    max-width: 320px;
+    width: 88%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: entryFloat 3s ease-in-out infinite;
+  }
+  @keyframes entryFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .entry-card h2 {
+    font-size: 1.5em;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  .entry-sub {
+    font-size: 0.9em;
+    color: #999;
+    margin-bottom: 22px;
+  }
+  #entry-input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 2px solid #EEE;
+    border-radius: 14px;
+    font-size: 1.1em;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s;
+    font-family: inherit;
+  }
+  #entry-input:focus { border-color: var(--pink-4); }
+  #entry-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 13px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--pink-4), var(--pink-5));
+    color: white;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+  }
+  #entry-btn:active { transform: scale(0.96); }
+  #entry-error {
+    margin-top: 12px;
+    font-size: 0.9em;
+    color: #FF6B6B;
+    min-height: 22px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  #entry-error.show { opacity: 1; }
+  .entry-card.shake {
+    animation: entryShake 0.5s ease;
+  }
+  @keyframes entryShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-12px); }
+    40% { transform: translateX(12px); }
+    60% { transform: translateX(-8px); }
+    80% { transform: translateX(8px); }
+  }
+
+  /* Entry fireworks canvas */
+  #entry-firework-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 1001;
+  }
+
   /* ============ Falling Sakura ============ */
   #sakura-canvas {
     position: fixed;
@@ -436,6 +533,105 @@
     50% { opacity: 1; }
   }
 
+  /* ============ Wishing Slider Section ============ */
+  .wish-section h2 {
+    text-align: center;
+    font-size: 1.3em;
+    color: var(--pink-5);
+    margin-bottom: 8px;
+  }
+  .wish-desc {
+    text-align: center;
+    font-size: 0.95em;
+    color: #999;
+    margin-bottom: 20px;
+  }
+  .wish-slider-container {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .wish-slider-track {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    background: #F0E0E8;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .wish-slider-fill {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--pink-3), var(--pink-5));
+    border-radius: 4px;
+    transition: width 0.08s ease;
+  }
+  .wish-slider-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 18px rgba(255,107,138,0.3);
+    cursor: grab;
+    transition: left 0.08s ease;
+    z-index: 2;
+  }
+  .wish-slider-thumb:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.1); }
+  .wish-slider-thumb.completed {
+    background: var(--pink-5);
+    cursor: default;
+  }
+  .wish-hint {
+    text-align: center;
+    font-size: 0.85em;
+    color: #BBB;
+    margin-top: 14px;
+    transition: all 0.3s;
+  }
+
+  /* Candle popup hint */
+  .candle-popup {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: linear-gradient(135deg, #FF6B8A, #FF4081);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 20px;
+    font-size: 1.05em;
+    font-weight: 700;
+    z-index: 300;
+    box-shadow: 0 12px 40px rgba(255,107,138,0.4);
+    animation: popupSlideIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  @keyframes popupSlideIn {
+    to { transform: translateX(-50%) translateY(0); }
+  }
+  .candle-popup.out {
+    animation: popupSlideOut 0.5s ease-in forwards;
+  }
+  @keyframes popupSlideOut {
+    to { transform: translateX(-50%) translateY(120px); opacity: 0; }
+  }
+
   /* ============ Fireworks Canvas ============ */
   #firework-canvas {
     position: fixed;
@@ -563,6 +759,20 @@
 </head>
 <body>
 
+<!-- Entry Overlay (Black Screen) -->
+<div id="entry-overlay">
+  <div class="entry-card" id="entry-card">
+    <h2>🎂 谁过生日？</h2>
+    <p class="entry-sub">请输入寿星的名字</p>
+    <input type="text" id="entry-input" placeholder="在这里输入..." maxlength="10" autocomplete="off">
+    <button id="entry-btn">✨ 确认 ✨</button>
+    <p class="entry-error" id="entry-error"></p>
+  </div>
+</div>
+
+<!-- Entry Fireworks Canvas -->
+<canvas id="entry-firework-canvas"></canvas>
+
 <!-- Music Toggle -->
 <button class="music-toggle" id="musicBtn" title="点我播放音乐 🎵">🎵</button>
 
@@ -655,6 +865,19 @@
     <p class="cake-hint" id="cakeHint">👆 点一下火焰试试～</p>
   </section>
 
+  <!-- ===== Wishing Slider ===== -->
+  <section class="card wish-section reveal">
+    <h2>✨ 滑动开始许愿 ✨</h2>
+    <p class="wish-desc">闭上眼睛，许一个最美的愿望吧</p>
+    <div class="wish-slider-container" id="wishSlider">
+      <div class="wish-slider-track">
+        <div class="wish-slider-fill" id="wishFill"></div>
+        <div class="wish-slider-thumb" id="wishThumb">🕯️</div>
+      </div>
+    </div>
+    <p class="wish-hint" id="wishHint">👉 向右滑动蜡烛开始许愿</p>
+  </section>
+
   <!-- ===== Fortune Cards ===== -->
   <section class="card fortune-section reveal">
     <h2>🍀 点开你的好运签 🍀</h2>
@@ -708,6 +931,152 @@
 </main>
 
 <script>
+// ==================== ENTRY SCREEN (Black Screen + Name Check) ====================
+(function() {
+  const overlay = document.getElementById('entry-overlay');
+  const card = document.getElementById('entry-card');
+  const input = document.getElementById('entry-input');
+  const btn = document.getElementById('entry-btn');
+  const errorEl = document.getElementById('entry-error');
+  const fwCanvas = document.getElementById('entry-firework-canvas');
+  const correctName = '张婷婷';
+
+  const funnyErrors = [
+    '🤔 不对哦～再想想？',
+    '😂 哈哈不是这个名字啦！',
+    '🙈 哎呀，差一点……其实差很多',
+    '🫣 偷偷告诉你，不是这个名字～',
+    '😜 你是寿星本人吗？再试一次！',
+    '🤪 这谁呀？不认识！换个名字',
+    '😤 密码错误！…哦不对这不是密码',
+    '🫠 建议你打个电话确认一下',
+  ];
+
+  function showError() {
+    var msg = funnyErrors[Math.floor(Math.random() * funnyErrors.length)];
+    errorEl.textContent = msg;
+    errorEl.classList.add('show');
+    card.classList.add('shake');
+    input.style.borderColor = '#FF6B6B';
+    setTimeout(function() {
+      card.classList.remove('shake');
+      errorEl.classList.remove('show');
+      input.style.borderColor = '#EEE';
+    }, 2200);
+  }
+
+  function success() {
+    // Big entry fireworks at center
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight / 2;
+    triggerEntryFireworks(cx, cy);
+    setTimeout(function() { triggerEntryFireworks(cx - 120, cy - 100); }, 300);
+    setTimeout(function() { triggerEntryFireworks(cx + 130, cy - 80); }, 600);
+    setTimeout(function() { triggerEntryFireworks(cx - 40, cy - 160); }, 900);
+
+    // Hide overlay
+    setTimeout(function() {
+      overlay.classList.add('hidden');
+      window.scrollTo(0, 0);
+    }, 1400);
+
+    // Disable further input
+    btn.disabled = true;
+    input.disabled = true;
+  }
+
+  function checkName() {
+    var val = input.value.trim();
+    if (!val) {
+      errorEl.textContent = '😅 至少输入个字嘛～';
+      errorEl.classList.add('show');
+      card.classList.add('shake');
+      setTimeout(function() {
+        card.classList.remove('shake');
+        errorEl.classList.remove('show');
+      }, 1500);
+      return;
+    }
+    if (val === correctName) {
+      success();
+    } else {
+      showError();
+    }
+  }
+
+  btn.addEventListener('click', checkName);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkName();
+  });
+
+  // === Entry Fireworks System ===
+  var entryParticles = [];
+  var entryAnimId = null;
+  var eCanvas = fwCanvas;
+  var eCtx = eCanvas.getContext('2d');
+  eCanvas.width = window.innerWidth;
+  eCanvas.height = window.innerHeight;
+  window.addEventListener('resize', function() {
+    eCanvas.width = window.innerWidth;
+    eCanvas.height = window.innerHeight;
+  });
+
+  function EntryParticle(x, y, color) {
+    var angle = Math.random() * Math.PI * 2;
+    var speed = 3 + Math.random() * 8;
+    this.x = x;
+    this.y = y;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.color = color;
+    this.life = 1;
+    this.decay = 0.006 + Math.random() * 0.02;
+    this.size = 3 + Math.random() * 5;
+    this.gravity = 0.05;
+  }
+  EntryParticle.prototype.update = function() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy += this.gravity;
+    this.vx *= 0.99;
+    this.life -= this.decay;
+  };
+  EntryParticle.prototype.draw = function() {
+    eCtx.beginPath();
+    eCtx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+    eCtx.fillStyle = this.color.replace('1)', this.life + ')');
+    eCtx.fill();
+  };
+
+  function entryBurst(x, y) {
+    var colors = [
+      'rgba(255, 107, 138, 1)', 'rgba(255, 215, 0, 1)',
+      'rgba(255, 182, 193, 1)', 'rgba(255, 255, 255, 1)',
+      'rgba(213, 198, 224, 1)', 'rgba(135, 206, 250, 1)',
+      'rgba(255, 160, 122, 1)', 'rgba(152, 251, 152, 1)',
+    ];
+    for (var i = 0; i < 80; i++) {
+      entryParticles.push(new EntryParticle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+    }
+  }
+
+  function entryAnimate() {
+    eCtx.clearRect(0, 0, eCanvas.width, eCanvas.height);
+    entryParticles = entryParticles.filter(function(p) { return p.life > 0; });
+    entryParticles.forEach(function(p) { p.update(); p.draw(); });
+    if (entryParticles.length > 0) {
+      entryAnimId = requestAnimationFrame(entryAnimate);
+    } else {
+      entryAnimId = null;
+    }
+  }
+
+  window.triggerEntryFireworks = function(x, y) {
+    entryBurst(x, y);
+    if (!entryAnimId) entryAnimId = requestAnimationFrame(entryAnimate);
+  };
+})();
+
 // ==================== SAKURA PETALS ====================
 (function() {
   const canvas = document.getElementById('sakura-canvas');
@@ -896,6 +1265,109 @@
       hint.style.fontSize = '0.9em';
       blown = false;
     }, 4000);
+  });
+})();
+
+// ==================== WISHING SLIDER ====================
+(function() {
+  var slider = document.getElementById('wishSlider');
+  var thumb = document.getElementById('wishThumb');
+  var fill = document.getElementById('wishFill');
+  var hint = document.getElementById('wishHint');
+  var musicBtn = document.getElementById('musicBtn');
+  var completed = false;
+  var dragging = false;
+
+  function updatePosition(clientX) {
+    var track = slider.querySelector('.wish-slider-track');
+    var rect = track.getBoundingClientRect();
+    var percent = (clientX - rect.left) / rect.width;
+    percent = Math.max(0, Math.min(1, percent));
+    thumb.style.left = (percent * 100) + '%';
+    fill.style.width = (percent * 100) + '%';
+
+    if (percent >= 0.93 && !completed) {
+      completed = true;
+      thumb.classList.add('completed');
+      thumb.textContent = '✨';
+      hint.textContent = '🎶 正在许愿中……闭上眼睛吧～';
+      hint.style.color = 'var(--pink-5)';
+      hint.style.fontWeight = '600';
+
+      // Auto-start music
+      if (musicBtn && !musicBtn.classList.contains('playing')) {
+        musicBtn.click();
+      }
+
+      // Show candle hint popup after 10 seconds
+      setTimeout(function() {
+        showCandlePopup();
+      }, 10000);
+    }
+  }
+
+  function showCandlePopup() {
+    var popup = document.createElement('div');
+    popup.className = 'candle-popup';
+    popup.textContent = '🕯️ 现在可以点击熄灭蜡烛啦！';
+    document.body.appendChild(popup);
+
+    // Fade out after 6 seconds
+    setTimeout(function() {
+      popup.classList.add('out');
+      setTimeout(function() { popup.remove(); }, 500);
+    }, 6000);
+  }
+
+  // Mouse events
+  thumb.addEventListener('mousedown', function(e) {
+    if (completed) return;
+    dragging = true;
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!dragging || completed) return;
+    updatePosition(e.clientX);
+  });
+
+  document.addEventListener('mouseup', function() { dragging = false; });
+
+  // Touch events
+  thumb.addEventListener('touchstart', function(e) {
+    if (completed) return;
+    dragging = true;
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!dragging || completed) return;
+    updatePosition(e.touches[0].clientX);
+  }, { passive: false });
+
+  document.addEventListener('touchend', function() { dragging = false; });
+
+  // Click/tap on track to quick-complete
+  slider.querySelector('.wish-slider-track').addEventListener('click', function(e) {
+    if (completed) return;
+    updatePosition(e.clientX);
+    // If click didn't reach 93%, snap to 100%
+    if (!completed) {
+      thumb.style.left = '100%';
+      fill.style.width = '100%';
+      completed = true;
+      thumb.classList.add('completed');
+      thumb.textContent = '✨';
+      hint.textContent = '🎶 正在许愿中……闭上眼睛吧～';
+      hint.style.color = 'var(--pink-5)';
+      hint.style.fontWeight = '600';
+      if (musicBtn && !musicBtn.classList.contains('playing')) {
+        musicBtn.click();
+      }
+      setTimeout(function() {
+        showCandlePopup();
+      }, 10000);
+    }
   });
 })();
 
