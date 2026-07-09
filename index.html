@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎂 生日快乐，姐姐！</title>
+<style>
+  /* ============ Reset & Base ============ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink-1: #FFF0F5;
+    --pink-2: #FFE4E1;
+    --pink-3: #FFB6C1;
+    --pink-4: #FF85A2;
+    --pink-5: #FF6B8A;
+    --purple: #D5C6E0;
+    --gold: #FFD700;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    background: linear-gradient(180deg, #FFF0F5 0%, #FFE4E1 30%, #FFF0F5 60%, #E8D5F5 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #5D4037;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ============ Falling Sakura ============ */
+  #sakura-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* ============ Music Toggle ============ */
+  .music-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--pink-4);
+    background: var(--white);
+    cursor: pointer;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(255, 107, 138, 0.2);
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  .music-toggle:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(255, 107, 138, 0.35); }
+  .music-toggle:active { transform: scale(0.95); }
+  .music-toggle.playing {
+    background: var(--pink-4);
+    border-color: var(--pink-4);
+    color: white;
+    animation: musicPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes musicPulse {
+    0%, 100% { box-shadow: 0 4px 15px rgba(255, 107, 138, 0.2); }
+    50% { box-shadow: 0 4px 30px rgba(255, 107, 138, 0.5); }
+  }
+
+  /* ============ Main Container ============ */
+  .main {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============ Hero Section ============ */
+  .hero {
+    text-align: center;
+    padding: 60px 0 40px;
+    animation: fadeInDown 1s ease-out;
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero .cake-emoji {
+    font-size: 80px;
+    display: block;
+    animation: cakeBounce 2s ease-in-out infinite;
+  }
+  @keyframes cakeBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .hero h1 {
+    font-size: 2.2em;
+    margin: 10px 0 5px;
+    background: linear-gradient(135deg, var(--pink-5), #FF4081);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+  }
+  .hero .subtitle {
+    font-size: 1.1em;
+    color: #999;
+    margin-bottom: 20px;
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    margin-top: 30px;
+    animation: scrollHint 2s ease-in-out infinite;
+    font-size: 28px;
+    opacity: 0.6;
+  }
+  @keyframes scrollHint {
+    0%, 100% { transform: translateY(0); opacity: 0.3; }
+    50% { transform: translateY(12px); opacity: 0.8; }
+  }
+
+  /* ============ Section Cards ============ */
+  .card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 30px 24px;
+    margin: 24px 0;
+    box-shadow: 0 8px 32px rgba(255, 133, 162, 0.12);
+    border: 1.5px solid rgba(255, 182, 193, 0.4);
+    transition: transform 0.3s ease;
+  }
+  .card:hover { transform: translateY(-2px); }
+
+  /* ============ Blessing Card ============ */
+  .blessing-card { }
+  .blessing-card .greeting {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--pink-5);
+    margin-bottom: 16px;
+  }
+  .blessing-card .line {
+    font-size: 1.05em;
+    line-height: 2;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+  }
+  .blessing-card .line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .blessing-card .line .highlight {
+    background: linear-gradient(180deg, transparent 60%, #FFE4E1 60%);
+    padding: 0 4px;
+  }
+  .blessing-card .divider {
+    text-align: center;
+    font-size: 1.5em;
+    margin: 8px 0;
+    opacity: 0.5;
+  }
+  .blessing-card .wish-item {
+    font-size: 1.05em;
+    padding: 6px 0 6px 8px;
+    line-height: 1.8;
+  }
+
+  /* ============ Cake & Candle Section ============ */
+  .cake-section {
+    text-align: center;
+  }
+  .cake-section h2 {
+    font-size: 1.3em;
+    color: var(--pink-5);
+    margin-bottom: 16px;
+  }
+
+  /* CSS Cake */
+  .cake-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cake {
+    position: relative;
+    width: 200px;
+    margin: 0 auto;
+  }
+  /* Cake layers */
+  .cake-layer {
+    margin: 0 auto;
+    border-radius: 12px;
+    position: relative;
+  }
+  .cake-layer-1 {
+    width: 200px;
+    height: 40px;
+    background: linear-gradient(180deg, #FFB6C1, #FF85A2);
+    border-radius: 12px 12px 4px 4px;
+  }
+  .cake-layer-2 {
+    width: 160px;
+    height: 36px;
+    background: linear-gradient(180deg, #FFC0CB, #FFB6C1);
+    border-radius: 10px 10px 4px 4px;
+    margin-top: -2px;
+  }
+  .cake-layer-3 {
+    width: 120px;
+    height: 30px;
+    background: linear-gradient(180deg, #FFD1DC, #FFC0CB);
+    border-radius: 8px 8px 4px 4px;
+    margin-top: -2px;
+  }
+  /* Frosting drips */
+  .frost {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 204px;
+    height: 14px;
+    background: radial-gradient(ellipse at 30% 0%, #FFF 40%, #FFB6C1 60%);
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  /* Candles */
+  .candles {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: -8px;
+    position: relative;
+    z-index: 3;
+  }
+  .candle {
+    width: 12px;
+    height: 45px;
+    background: linear-gradient(180deg, #FFD700, #FFA000);
+    border-radius: 4px 4px 2px 2px;
+    position: relative;
+  }
+  .candle::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 2px;
+    width: 8px;
+    height: 2px;
+    background: #4A4A4A;
+    border-radius: 2px;
+  }
+  .flame {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 22px;
+    background: radial-gradient(ellipse at 50% 60%, #FFF 10%, #FFD700 40%, #FF6D00 80%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 0.5s ease-in-out infinite alternate;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .candle:nth-child(2) .flame { animation-delay: 0.15s; }
+  .candle:nth-child(3) .flame { animation-delay: 0.3s; }
+
+  @keyframes flicker {
+    0% { transform: translateX(-50%) scaleY(1) scaleX(1); }
+    25% { transform: translateX(-40%) scaleY(0.85) scaleX(1.1); }
+    50% { transform: translateX(-55%) scaleY(1.05) scaleX(0.9); }
+    75% { transform: translateX(-45%) scaleY(0.9) scaleX(1.05); }
+    100% { transform: translateX(-50%) scaleY(1) scaleX(1); }
+  }
+
+  .flame.out {
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+  }
+
+  .cake-hint {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #BBB;
+    animation: hintPulse 2s ease-in-out infinite;
+  }
+  @keyframes hintPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* ============ Fireworks Canvas ============ */
+  #firework-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  /* ============ Fortune Cards ============ */
+  .fortune-section h2 {
+    text-align: center;
+    font-size: 1.3em;
+    color: var(--pink-5);
+    margin-bottom: 20px;
+  }
+  .fortune-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .fortune-card {
+    perspective: 600px;
+    height: 100px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fortune-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+  }
+  .fortune-card.flipped .fortune-card-inner {
+    transform: rotateY(180deg);
+  }
+  .fortune-front, .fortune-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05em;
+    font-weight: 700;
+  }
+  .fortune-front {
+    background: linear-gradient(135deg, #FFF, #FFF0F5);
+    border: 2px dashed var(--pink-3);
+    color: var(--pink-4);
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fortune-front .icon { font-size: 2em; }
+  .fortune-front .label { font-size: 0.8em; color: #999; }
+  .fortune-back {
+    background: linear-gradient(135deg, var(--pink-4), #FF6B8A);
+    color: white;
+    transform: rotateY(180deg);
+    padding: 16px;
+    text-align: center;
+  }
+
+  /* ============ Footer ============ */
+  .footer {
+    text-align: center;
+    padding: 30px 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+  }
+  .footer.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .footer .closing {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--pink-5);
+    margin-bottom: 8px;
+  }
+  .footer .date {
+    font-size: 0.85em;
+    color: #BBB;
+  }
+  .footer .heart-row {
+    font-size: 2em;
+    margin: 10px 0;
+    animation: heartBeat 1.2s ease-in-out infinite;
+  }
+  @keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.3); }
+    30% { transform: scale(1); }
+  }
+
+  /* ============ Scroll Reveal ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ Decorative Floating Elements ============ */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 50;
+    animation: sparkleFloat 4s ease-in-out infinite;
+  }
+  @keyframes sparkleFloat {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Music Toggle -->
+<button class="music-toggle" id="musicBtn" title="点我播放音乐 🎵">🎵</button>
+
+<!-- Sakura Canvas -->
+<canvas id="sakura-canvas"></canvas>
+
+<!-- Firework Canvas -->
+<canvas id="firework-canvas"></canvas>
+
+<!-- Main Content -->
+<main class="main">
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <span class="cake-emoji">🎂</span>
+    <h1>生日快乐</h1>
+    <p class="subtitle">💝 给我最可爱的姐姐 💝</p>
+    <div class="scroll-indicator">↓ 往下看哦 ↓</div>
+  </section>
+
+  <!-- ===== Blessing ===== -->
+  <section class="card blessing-card reveal">
+    <p class="greeting">亲爱的姐姐：</p>
+    <p class="line" data-delay="0">恭喜你又解锁了新的一岁！🎉</p>
+    <div class="divider">— ✨ —</div>
+    <p class="line" data-delay="1">
+      过去一年的<span class="highlight">烦恼、不开心、小插曲</span>——
+    </p>
+    <p class="line" data-delay="2" style="text-align:center;font-size:1.2em;">
+      🚫 统统翻篇，全部走开！🚫
+    </p>
+    <div class="divider">— ✨ —</div>
+    <p class="line" data-delay="3">
+      那些<span class="highlight">美好的瞬间、幸运的小事、温暖的回忆</span>——
+    </p>
+    <p class="line" data-delay="4" style="text-align:center;font-size:1.2em;">
+      ✨ 一个不落，全部保留！✨
+    </p>
+    <div class="divider">— 🌸 —</div>
+    <p class="line wish-item" data-delay="5">🌸 每一天都被温柔以待</p>
+    <p class="line wish-item" data-delay="6">🌸 每一个小目标都能实现</p>
+    <p class="line wish-item" data-delay="7">🌸 遇到的都是善良的人</p>
+    <p class="line wish-item" data-delay="8">🌸 好运像星星一样数不完</p>
+    <div class="divider">— 💖 —</div>
+    <p class="line" data-delay="9" style="font-weight:700;font-size:1.15em;color:var(--pink-5);text-align:center;">
+      生日快乐，全世界最棒的姐姐！
+    </p>
+  </section>
+
+  <!-- ===== Cake & Candle ===== -->
+  <section class="card cake-section reveal">
+    <h2>🕯️ 点一下蜡烛试试 🕯️</h2>
+    <div class="cake-container" id="cakeContainer">
+      <div class="candles">
+        <div class="candle" data-candle="1">
+          <div class="flame"></div>
+        </div>
+        <div class="candle" data-candle="2">
+          <div class="flame"></div>
+        </div>
+        <div class="candle" data-candle="3">
+          <div class="flame"></div>
+        </div>
+      </div>
+      <div class="cake">
+        <div class="cake-layer cake-layer-3" style="margin-top:0;"></div>
+        <div class="cake-layer cake-layer-2"></div>
+        <div class="cake-layer cake-layer-1"></div>
+      </div>
+    </div>
+    <p class="cake-hint" id="cakeHint">👆 点一下火焰试试～</p>
+  </section>
+
+  <!-- ===== Fortune Cards ===== -->
+  <section class="card fortune-section reveal">
+    <h2>🍀 点开你的好运签 🍀</h2>
+    <div class="fortune-grid">
+      <div class="fortune-card" onclick="this.classList.toggle('flipped')">
+        <div class="fortune-card-inner">
+          <div class="fortune-front"><span class="icon">🌟</span><span class="label">点我</span></div>
+          <div class="fortune-back">好运<br>全部保留 ✨</div>
+        </div>
+      </div>
+      <div class="fortune-card" onclick="this.classList.toggle('flipped')">
+        <div class="fortune-card-inner">
+          <div class="fortune-front"><span class="icon">💨</span><span class="label">点我</span></div>
+          <div class="fortune-back">烦恼<br>全部走开 🚫</div>
+        </div>
+      </div>
+      <div class="fortune-card" onclick="this.classList.toggle('flipped')">
+        <div class="fortune-card-inner">
+          <div class="fortune-front"><span class="icon">😊</span><span class="label">点我</span></div>
+          <div class="fortune-back">天天<br>开心 🥰</div>
+        </div>
+      </div>
+      <div class="fortune-card" onclick="this.classList.toggle('flipped')">
+        <div class="fortune-card-inner">
+          <div class="fortune-front"><span class="icon">💰</span><span class="label">点我</span></div>
+          <div class="fortune-back">暴富<br>变美 💅</div>
+        </div>
+      </div>
+      <div class="fortune-card" onclick="this.classList.toggle('flipped')">
+        <div class="fortune-card-inner">
+          <div class="fortune-front"><span class="icon">🎯</span><span class="label">点我</span></div>
+          <div class="fortune-back">心想<br>事成 🎯</div>
+        </div>
+      </div>
+      <div class="fortune-card" onclick="this.classList.toggle('flipped')">
+        <div class="fortune-card-inner">
+          <div class="fortune-front"><span class="icon">🍰</span><span class="label">点我</span></div>
+          <div class="fortune-back">吃啥<br>都不胖 🍰</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <section class="footer reveal" id="footer">
+    <p class="closing">永远爱你的弟弟 ❤️</p>
+    <div class="heart-row">💖 🎂 💖</div>
+    <p class="date">2026年7月</p>
+  </section>
+
+</main>
+
+<script>
+// ==================== SAKURA PETALS ====================
+(function() {
+  const canvas = document.getElementById('sakura-canvas');
+  const ctx = canvas.getContext('2d');
+  let petals = [];
+  const MAX = 30;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function Petal() {
+    this.reset();
+  }
+  Petal.prototype.reset = function() {
+    this.x = Math.random() * canvas.width;
+    this.y = -20 - Math.random() * canvas.height;
+    this.size = 8 + Math.random() * 14;
+    this.speed = 0.6 + Math.random() * 1.5;
+    this.swing = Math.random() * 2 - 1;
+    this.swingSpeed = 0.01 + Math.random() * 0.02;
+    this.angle = 0;
+    this.opacity = 0.3 + Math.random() * 0.5;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotSpeed = -0.02 + Math.random() * 0.04;
+    this.color = Math.random() < 0.7
+      ? `rgba(255, 182, 193, ${this.opacity})`
+      : `rgba(255, 255, 255, ${this.opacity})`;
+  };
+  Petal.prototype.update = function() {
+    this.y += this.speed;
+    this.angle += this.swingSpeed;
+    this.x += Math.sin(this.angle) * this.swing;
+    this.rotation += this.rotSpeed;
+    if (this.y > canvas.height + 30) {
+      this.reset();
+    }
+  };
+  Petal.prototype.draw = function() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    ctx.fillStyle = this.color;
+    // Draw a simple petal shape
+    ctx.beginPath();
+    ctx.ellipse(0, 0, this.size * 0.5, this.size * 0.25, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Add a slight shadow
+    ctx.fillStyle = this.color.replace(/[\d.]+\)$/, '0.15)');
+    ctx.beginPath();
+    ctx.ellipse(1, 1, this.size * 0.5, this.size * 0.25, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  };
+
+  // Initialize petals
+  for (let i = 0; i < MAX; i++) {
+    const p = new Petal();
+    p.y = Math.random() * canvas.height; // spread initially
+    petals.push(p);
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    petals.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ==================== FIREWORKS ====================
+(function() {
+  const canvas = document.getElementById('firework-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let animId = null;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function Particle(x, y, color) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 6;
+    this.x = x;
+    this.y = y;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.color = color;
+    this.life = 1;
+    this.decay = 0.008 + Math.random() * 0.025;
+    this.size = 2 + Math.random() * 3;
+    this.gravity = 0.04;
+  }
+  Particle.prototype.update = function() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy += this.gravity;
+    this.vx *= 0.99;
+    this.life -= this.decay;
+  };
+  Particle.prototype.draw = function() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+    ctx.fillStyle = this.color.replace('1)', `${this.life})`);
+    ctx.fill();
+  };
+
+  function burst(x, y) {
+    const colors = [
+      'rgba(255, 107, 138, 1)',
+      'rgba(255, 215, 0, 1)',
+      'rgba(255, 182, 193, 1)',
+      'rgba(255, 255, 255, 1)',
+      'rgba(213, 198, 224, 1)',
+      'rgba(255, 160, 122, 1)',
+      'rgba(135, 206, 250, 1)',
+    ];
+    for (let i = 0; i < 60; i++) {
+      particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles = particles.filter(p => p.life > 0);
+    particles.forEach(p => { p.update(); p.draw(); });
+    if (particles.length > 0) {
+      animId = requestAnimationFrame(animate);
+    } else {
+      animId = null;
+    }
+  }
+
+  window.triggerFireworks = function(x, y) {
+    // Fire 3 bursts
+    burst(x, y);
+    setTimeout(() => burst(x - 30 + Math.random() * 60, y - 20 + Math.random() * 40), 150);
+    setTimeout(() => burst(x - 40 + Math.random() * 80, y - 30 + Math.random() * 50), 350);
+    if (!animId) animId = requestAnimationFrame(animate);
+  };
+})();
+
+// ==================== CANDLE BLOWING ====================
+(function() {
+  const flames = document.querySelectorAll('.flame');
+  const hint = document.getElementById('cakeHint');
+  let blown = false;
+
+  document.getElementById('cakeContainer').addEventListener('click', function(e) {
+    if (blown) return;
+    blown = true;
+
+    // Blow out all flames
+    flames.forEach((f, i) => {
+      setTimeout(() => f.classList.add('out'), i * 120);
+    });
+
+    hint.textContent = '🎉 生日快乐！！🎉';
+    hint.style.color = 'var(--pink-5)';
+    hint.style.animation = 'none';
+    hint.style.fontWeight = '700';
+    hint.style.fontSize = '1.1em';
+
+    // Fireworks at the candle position
+    const rect = this.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + 80;
+    triggerFireworks(cx, cy);
+
+    // Relight after a while
+    setTimeout(() => {
+      flames.forEach((f, i) => {
+        setTimeout(() => f.classList.remove('out'), i * 100);
+      });
+      hint.textContent = '👆 再点一次试试～';
+      hint.style.color = '#BBB';
+      hint.style.fontWeight = '400';
+      hint.style.fontSize = '0.9em';
+      blown = false;
+    }, 4000);
+  });
+})();
+
+// ==================== SCROLL REVEAL ====================
+(function() {
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Trigger line-by-line animation in blessing card
+        const lines = entry.target.querySelectorAll('.line');
+        lines.forEach(line => {
+          const delay = parseInt(line.getAttribute('data-delay') || '0');
+          setTimeout(() => line.classList.add('visible'), delay * 250);
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  // Footer observer
+  const footer = document.getElementById('footer');
+  const footerObs = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      footer.classList.add('visible');
+    }
+  }, { threshold: 0.5 });
+  footerObs.observe(footer);
+})();
+
+// ==================== MUSIC BOX (Web Audio API) ====================
+(function() {
+  const btn = document.getElementById('musicBtn');
+  let playing = false;
+  let audioCtx = null;
+  let musicInterval = null;
+  let currentNoteIdx = 0;
+
+  // "Happy Birthday" melody notes (frequency in Hz)
+  // Happy birthday to you, happy birthday to you...
+  const melody = [
+    // 5 5 6 5 1 7
+    392, 392, 440, 392, 523, 494,
+    // 5 5 6 5 2 1
+    392, 392, 440, 392, 587, 523,
+    // 5 5 5 3 1 7 6
+    392, 392, 784, 659, 523, 494, 440,
+    // 4 4 3 1 2 1
+    349, 349, 330, 523, 587, 523,
+  ];
+  const noteDuration = 0.35; // seconds per note
+  const pauses = [5, 11, 18]; // pause after these indices (end of phrases)
+  // Indices for which notes to play longer
+  const longNotes = new Set([4, 5, 10, 11, 13, 17, 22, 23]);
+
+  function playNote(freq, duration) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+
+    // Add a slight vibrato for music-box feel
+    const vibrato = audioCtx.createOscillator();
+    const vibratoGain = audioCtx.createGain();
+    vibrato.frequency.value = 5;
+    vibratoGain.gain.value = 3;
+    vibrato.connect(vibratoGain);
+    vibratoGain.connect(osc.frequency);
+    vibrato.start();
+
+    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + duration);
+    vibrato.stop(audioCtx.currentTime + duration);
+  }
+
+  function playMelody() {
+    if (currentNoteIdx >= melody.length) {
+      currentNoteIdx = 0;
+      // Pause before loop
+      setTimeout(() => {
+        if (playing) playNextNote();
+      }, 1500);
+      return;
+    }
+    playNextNote();
+  }
+
+  function playNextNote() {
+    if (!playing || currentNoteIdx >= melody.length) return;
+
+    const freq = melody[currentNoteIdx];
+    const duration = longNotes.has(currentNoteIdx) ? noteDuration * 1.6 : noteDuration;
+    playNote(freq, duration);
+
+    currentNoteIdx++;
+
+    const gap = pauses.includes(currentNoteIdx - 1);
+    musicInterval = setTimeout(playMelody, (duration + (gap ? 0.25 : 0.08)) * 1000);
+  }
+
+  function startMusic() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    playing = true;
+    currentNoteIdx = 0;
+    btn.textContent = '🎶';
+    btn.classList.add('playing');
+    playMelody();
+  }
+
+  function stopMusic() {
+    playing = false;
+    clearTimeout(musicInterval);
+    btn.textContent = '🎵';
+    btn.classList.remove('playing');
+  }
+
+  btn.addEventListener('click', () => {
+    if (playing) {
+      stopMusic();
+    } else {
+      startMusic();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
